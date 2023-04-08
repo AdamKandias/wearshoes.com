@@ -1,0 +1,358 @@
+.text-primary {
+    color: #1D3CA3 !important;
+}
+
+.text-secondary {
+    color: #38BDF8 !important;
+}
+
+@font-face {
+    font-family: "Poppins";
+    src: url("../fonts/Poppins-Regular.ttf");
+}
+
+a {
+    color: inherit;
+    text-decoration: none;
+}
+
+a:hover {
+    color: inherit;
+}
+
+body {
+    font-family: "Poppins";
+}
+
+nav {
+    background-color: black !important;
+}
+
+input[type=search] {
+    border-radius: 5px 0 0 5px;
+}
+
+.btn-search {
+    background-color: #1E40AF;
+    color: white;
+    font-weight: bold;
+    letter-spacing: 1px;
+    border-radius: 0 5px 5px 0;
+}
+
+.btn-search:hover {
+    background-color: #102b83;
+    color: white;
+}
+
+.btn-search:focus {
+    background-color: #102b83 !important;
+    color: white !important;
+    border-color: #102b83 !important;
+}
+
+.hero {
+    background: linear-gradient(80.98deg, #38BDF8 0%, #1D3CA3 100%);
+    color: white;
+}
+
+.hero span {
+    font-weight: 400;
+    font-size: 20px;
+}
+
+.hero h1 {
+    font-weight: 700;
+    font-size: 65px;
+}
+
+.hero p {
+    font-weight: 300;
+    font-size: 15px;
+}
+
+.btn-shop {
+    background: #FF0000;
+    color: white;
+    border-radius: 15px;
+    padding: 0.5rem 2rem;
+}
+
+.btn-shop:hover {
+    background: #d30505;
+}
+
+.btn-shop:focus {
+    background: #d30505 !important;
+    border-color: #d30505 !important;
+
+}
+
+.btn-shop:active {
+    background: #d30505;
+}
+
+.feature-1 {
+    background-color: #FFE4CC;
+}
+
+.feature-2 {
+    background-color: #F8FFAB;
+}
+
+.feature-3 {
+    background-color: #F8DBFF;
+}
+
+.feature p{
+    font-size: 12px;
+}
+
+.product-card .card-img-top {
+    width: 100%;
+    height: 150px;
+    object-fit: cover;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.product-card .star {
+    color: #FFD335;
+}
+
+.product-shadow {
+    filter: drop-shadow(0px -2px 4px rgba(0, 0, 0, 0.25));
+}
+
+.product-card h6 {
+    font-size: larger;
+}
+
+.product-card .price h5 {
+    color: #1E40AF;
+}
+
+.product-card .price span {
+    font-size: 13px;
+}
+
+.product-card {
+    transition: all ease 0.5s;
+}
+
+.product-card:hover {
+    transform: scale(1.03);
+    filter: drop-shadow(0px -2px 4px #38bff8);
+}
+
+.category {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: brightness(0.6);
+    transition: all ease 0.3s;
+}
+
+.category-card:hover .category {
+    filter: brightness(0.4);
+}
+
+.category-card:hover .center-overlay {
+    text-shadow: 2px 0 #38BDF8;
+}
+
+.center-overlay {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    font-weight: bold;
+    letter-spacing: 3px;
+    transition: all ease 0.3s;
+}
+
+footer {
+    background-color: black;
+    cursor: default;
+}
+
+.footer-item {
+    color: #ffffffe3;
+}
+
+.footer-item span {
+    cursor: pointer;
+}
+
+.footer-item span:hover {
+    text-decoration: underline;
+}
+
+.line {
+    height: 1px;
+    background-color: #ffffff41;
+}
+
+.sosmed-icon {
+    color: #ffffff80;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+/* X-Large devices (large desktops, 1200px and up) */
+@media (max-width: 1200px) {
+    .hero h1 {
+        font-size: 55px;
+    }
+
+    .product-card .card-img-top {
+        height: 120px;
+    }
+}
+
+/* Large devices (desktops, 992px and up) */
+@media (max-width: 992px) {
+    .product-card .card-img-top {
+        height: 60px;
+    }
+
+    .product-card h6 {
+        font-size: 15px;
+    }
+
+    .product-card .price h5 {
+        font-size: 12px;
+    }
+
+    .product-card .price span {
+        font-size: 9px;
+    }
+
+    .product-card button {
+        font-size: 13px;
+    }
+
+    .responsive-footer {
+        display: flex;
+    }
+}
+
+/* Medium devices (tablets, 768px and up) */
+@media (max-width: 768px) {
+    .hero h1 {
+        font-size: 50px;
+    }
+
+    .product-card .card-img-top {
+        height: 130px;
+    }
+
+    .product-card h6 {
+        font-size: medium;
+    }
+
+    .product-card .price h5 {
+        font-size: 16px;
+    }
+
+    .product-card .price span {
+        font-size: 10px;
+    }
+
+    .product-card button {
+        font-size: 16px;
+    }
+}
+
+@media (max-width: 576px) {
+    .hero h1 {
+        font-weight: 700;
+        margin: 0.3rem 0;
+        font-size: 30px;
+    }
+
+    .hero span {
+        font-weight: 400;
+        font-size: 15px;
+    }
+
+    .product-card .card-img-top {
+        height: 120px;
+    }
+
+    .product-card button {
+        font-size: 10.8px;
+    }
+
+    .product-card h6 {
+        font-size: 15px;
+    }
+
+    .product-card .price h5 {
+        font-size: 13px;
+    }
+
+    .product-card .price span {
+        font-size: 10px;
+    }
+
+    .category-card .center-overlay {
+        font-size: 30px;
+    }
+
+    footer .text-muted {
+        font-size: 13px;
+    }
+}
+
+@media (max-width: 420px) {
+
+    .product-card .card-img-top {
+        height: 80px;
+    }
+
+    .category-card .center-overlay {
+        font-size: 20px;
+    }
+
+    footer .text-muted {
+        font-size: 11.5px;
+    }
+
+}
+
+@media (max-width: 320px) {
+    .btn-shop {
+        font-size: 12px;
+        background: #FF0000;
+        color: white;
+        border-radius: 15px;
+        padding: 0.5rem 2rem;
+    }
+
+    .product-card .star {
+        font-size: 10px;
+    }
+
+    .product-card h6 {
+        font-size: 12px;
+    }
+
+    .product-card button {
+        font-size: 7px;
+    }
+
+    .product-card .card-img-top {
+        height: 40px;
+    }
+
+    .category-card .center-overlay {
+        font-size: 15px;
+    }
+
+    footer .text-muted {
+        font-size: 9px;
+    }
+}
