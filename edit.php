@@ -1,6 +1,7 @@
 <?php
 require_once './services/authorization.php';
 require_once "db/database.php";
+require_once "utils/utils.php";
 $db = new Database();
 $product = $db->getProductBySlug($_GET["product"]);
 $images = $db->getImagesByProductId($product->id);
@@ -18,7 +19,11 @@ $images = $db->getImagesByProductId($product->id);
     <link rel="stylesheet" href="assets/css/dashboard.css">
     <!-- Bootstrap Icon Css -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
-    <title>Detail Product | Wearshoes</title>
+    <!-- Lite Editor WYSIWYG Js -->
+    <script src="https://unpkg.com/lite-editor@1.6.39/js/lite-editor.min.js"></script>
+    <!-- Lite Editor WYSIWYG Css -->
+    <link rel="stylesheet" href="https://unpkg.com/lite-editor@1.6.39/css/lite-editor.css">
+    <title>Edit Product | Wearshoes</title>
 </head>
 
 <style>
@@ -78,15 +83,30 @@ $images = $db->getImagesByProductId($product->id);
                 <div class="position-sticky sidebar-sticky">
                     <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted text-uppercase">
                         <span>Dashboard</span>
-                        <a class="link-secondary" href="dashboard.php" aria-label="Add a new report">
-                            <span class="align-text-bottom"><i class="bi bi-speedometer"></i></span>
+                        <a class="link-secondary" href="#" aria-label="Add a new report">
+                            <span><i class="bi bi-speedometer"></i></span>
                         </a>
                     </h6>
                     <ul class="nav flex-column">
                         <li class="nav-item">
                             <a class="nav-link" aria-current="page" href="dashboard.php">
-                                <span class="align-text-bottom"><i class="bi bi-box-fill me-2"></i></span>
+                                <span><i class="bi bi-box-fill me-2"></i></span>
                                 Products
+                            </a>
+                        </li>
+                    </ul>
+
+                    <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted text-uppercase">
+                        <span>Messages</span>
+                        <a class="link-secondary" href="#" aria-label="Add a new report">
+                            <span><i class="bi bi-envelope-exclamation-fill"></i></span>
+                        </a>
+                    </h6>
+                    <ul class="nav flex-column mb-2">
+                        <li class="nav-item">
+                            <a class="nav-link" href="messages.php">
+                                <span><i class="bi bi-envelope-fill me-2"></i></span>
+                                Read Messages
                             </a>
                         </li>
                     </ul>
@@ -94,21 +114,21 @@ $images = $db->getImagesByProductId($product->id);
                     <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted text-uppercase">
                         <span>More</span>
                         <a class="link-secondary" href="#" aria-label="Add a new report">
-                            <span class="align-text-bottom"><i class="bi bi-plus-circle-fill"></i></span>
+                            <span><i class="bi bi-plus-circle-fill"></i></span>
                         </a>
                     </h6>
                     <ul class="nav flex-column mb-2">
                         <li class="nav-item">
                             <a class="nav-link" target="_blank" href="./">
-                                <span class="align-text-bottom"><i class="bi bi-eye-fill me-2"></i></span>
+                                <span><i class="bi bi-eye-fill me-2"></i></span>
                                 View Catalog
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#">
-                                <span class="align-text-bottom"><i class="bi bi-person-fill-dash me-2"></i></span>
-                                Logout
-                            </a>
+                            <form class="nav-link" method="POST" action="./services/authentication.php">
+                                <button name="logout-btn" class="border-0 bg-transparent ps-0 col-12 d-flex" style="font-weight: 500; color: #333;" type="submit"><span><i class="bi bi-person-fill-dash" style="margin-right: 0.75rem;"></i></span>
+                                    Logout</button>
+                            </form>
                         </li>
                     </ul>
                 </div>
@@ -124,11 +144,12 @@ $images = $db->getImagesByProductId($product->id);
                         <input type="hidden" value="<?= $product->slug ?>" name="slug">
                         <div class="col-md-12">
                             <label for="description" class="form-label">Product Description</label>
-                            <textarea name="description" id="description" cols="30" rows="10" class="form-control" required><?= $product->description ?></textarea>
+                            <textarea name="description" id="description" cols="30" rows="10" class="form-control js-editor lite-editor" required><?= $product->description ?></textarea>
                         </div>
                         <div class="col-md-2">
                             <label for="price" class="form-label">Price ($)</label>
                             <input type="number" class="form-control" id="price" name="price" required value="<?= $product->price ?>">
+                            <small class="form-text text-muted">Example: <?= $product->price ?> = $<?= Utils::CurrencyFormatting($product->price) ?></small>
                         </div>
                         <div class="col-md-8">
                             <label class="form-label">Size</label>
@@ -154,7 +175,7 @@ $images = $db->getImagesByProductId($product->id);
                         <div class="col-md-8">
                             <label for="color" class="form-label">Color</label>
                             <input type="text" class="form-control" id="color" name="color" required value="<?= $product->color ?>">
-                            <small class="form-text text-muted">Separate color with a comma. example: red,blue,green,pink</small>
+                            <small class="form-text text-muted">Separate color with a comma. Example: red,blue,green,pink</small>
                         </div>
                         <div class="col-md-2">
                             <label for="category" class="form-label">Product Category</label>
@@ -260,7 +281,8 @@ $images = $db->getImagesByProductId($product->id);
         var modal = event.target; // Modal
         modal.querySelector('.modal-footer #image-id').value = imageId;
     });
-</script>
+
+    new LiteEditor('.js-editor');
 </script>
 
 

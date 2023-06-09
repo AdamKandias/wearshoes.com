@@ -1,6 +1,7 @@
 <?php
 require_once 'authorization.php';
 require_once '../utils/fpdf/fpdf.php';
+require_once '../utils/utils.php';
 require_once '../db/database.php';
 $db = new Database();
 
@@ -32,7 +33,7 @@ foreach ($products as $product) {
     $pdf->Cell(10, 6, $no++, 1, 0, 'C');
     $pdf->Cell(80, 6, $product->name, 1, 0);
     $pdf->Cell(22, 6, $product->category, 1, 0);
-    $pdf->Cell(15, 6, "$" . number_format($product->price / 100, 2, '.', ','), 1, 0);
+    $pdf->Cell(15, 6, "$" . Utils::CurrencyFormatting($product->price), 1, 0);
     $pdf->Cell(70, 6, $product->color, 1, 0);
     $pdf->Cell(50, 6, $product->size, 1, 0);
     $pdf->Cell(16, 6, $product->weight . " gr", 1, 0);

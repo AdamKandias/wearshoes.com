@@ -51,6 +51,21 @@ $db = new Database();
           </ul>
 
           <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted text-uppercase">
+            <span>Messages</span>
+            <a class="link-secondary" href="#" aria-label="Add a new report">
+              <span><i class="bi bi-envelope-exclamation-fill"></i></span>
+            </a>
+          </h6>
+          <ul class="nav flex-column mb-2">
+            <li class="nav-item">
+              <a class="nav-link" href="messages.php">
+                <span><i class="bi bi-envelope-fill me-2"></i></span>
+                Read Messages
+              </a>
+            </li>
+          </ul>
+
+          <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted text-uppercase">
             <span>More</span>
             <a class="link-secondary" href="#" aria-label="Add a new report">
               <span><i class="bi bi-plus-circle-fill"></i></span>

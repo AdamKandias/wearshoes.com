@@ -1,8 +1,10 @@
 <?php
 require_once "db/database.php";
+require_once "utils/utils.php";
 $db = new Database();
 $product = $db->getProductBySlug($_GET["product"]);
 $images = $db->getImagesByProductId($product->id);
+$relatedProducts = $db->getRelatedProducts($product->category_id, $product->id);
 ?>
 
 <!doctype html>
@@ -90,7 +92,7 @@ $images = $db->getImagesByProductId($product->id);
                 </div>
                 <div class="description col-12 col-sm-6 mt-4 mt-sm-0">
                     <h3 class="fw-bold"><?= $product->name ?></h3>
-                    <h5 class="my-2 fw-bold">$<?= number_format($product->price) ?></h5>
+                    <h5 class="my-2 fw-bold">$<?= Utils::CurrencyFormatting($product->price) ?></h5>
                     <div class="star mt-1 mb-3">
                         <i class="bi bi-star-fill"></i>
                         <i class="bi bi-star-fill"></i>
@@ -98,7 +100,7 @@ $images = $db->getImagesByProductId($product->id);
                         <i class="bi bi-star-fill"></i>
                         <i class="bi bi-star-fill"></i>
                     </div>
-                    <p><?= $product->description ?></p>
+                    <div><?= $product->description ?></div>
                 </div>
             </div>
         </div>
@@ -109,102 +111,36 @@ $images = $db->getImagesByProductId($product->id);
     <div class="container mt-5 pb-5">
         <h2 class="text-center mb-5 fw-bold">Related Products</h2>
         <div class="row">
-            <div class="product-card col-md-3 col-6 mb-4">
-                <a href="detail-product.php">
-                    <div class="card h-100 product-shadow shadow">
-                        <div class="card-body">
-                            <div class="card-img-top">
-                                <img src="assets/img/product-1.png" class="img-fluid" alt="product-image">
+            <?php if (!empty($relatedProducts)) {
+                foreach ($relatedProducts as $relatedProduct) { ?>
+                    <div class="product-card col-md-3 col-6 mb-4">
+                        <a href="detail-product.php">
+                            <div class="card h-100 product-shadow shadow">
+                                <div class="card-body">
+                                    <div class="card-img-top">
+                                        <img src="public/img/products/<?= $relatedProduct->image ?>" class="img-fluid" alt="product-image">
+                                    </div>
+                                </div>
+                                <div class="card-body text-center">
+                                    <h6 class="fw-semibold"><?= $relatedProduct->name ?></h6>
+                                    <div class="star mb-3">
+                                        <i class="bi bi-star-fill"></i>
+                                        <i class="bi bi-star-fill"></i>
+                                        <i class="bi bi-star-fill"></i>
+                                        <i class="bi bi-star-fill"></i>
+                                        <i class="bi bi-star-fill"></i>
+                                    </div>
+                                    <div class="price">
+                                        <h5 class="mb-0 fw-bold">$386.66</h5>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                        <div class="card-body text-center">
-                            <h6 class="fw-semibold">Nike Legend Essential 3 Next Nature</h6>
-                            <div class="star mb-3">
-                                <i class="bi bi-star-fill"></i>
-                                <i class="bi bi-star-fill"></i>
-                                <i class="bi bi-star-fill"></i>
-                                <i class="bi bi-star-fill"></i>
-                                <i class="bi bi-star-fill"></i>
-                            </div>
-                            <div class="price">
-                                <h5 class="mb-0 fw-bold">$386.66</h5>
-                            </div>
-                        </div>
+                        </a>
                     </div>
-                </a>
-            </div>
-            <div class="product-card col-md-3 col-6 mb-4">
-                <a href="detail-product.php">
-                    <div class="card h-100 product-shadow shadow">
-                        <div class="card-body">
-                            <div class="card-img-top">
-                                <img src="assets/img/product-3.png" class="img-fluid" alt="product-image">
-                            </div>
-                        </div>
-                        <div class="card-body text-center">
-                            <h6 class="fw-semibold">Nike Legend Essential 3 Next Nature</h6>
-                            <div class="star mb-3">
-                                <i class="bi bi-star-fill"></i>
-                                <i class="bi bi-star-fill"></i>
-                                <i class="bi bi-star-fill"></i>
-                                <i class="bi bi-star-fill"></i>
-                                <i class="bi bi-star-fill"></i>
-                            </div>
-                            <div class="price">
-                                <h5 class="mb-0 fw-bold">$386.66</h5>
-                            </div>
-                        </div>
-                    </div>
-                </a>
-            </div>
-            <div class="product-card col-md-3 col-6 mb-4">
-                <a href="detail-product.php">
-                    <div class="card h-100 product-shadow shadow">
-                        <div class="card-body">
-                            <div class="card-img-top">
-                                <img src="assets/img/product-7.png" class="img-fluid" alt="product-image">
-                            </div>
-                        </div>
-                        <div class="card-body text-center">
-                            <h6 class="fw-semibold">Nike Legend Essential 3 Next Nature</h6>
-                            <div class="star mb-3">
-                                <i class="bi bi-star-fill"></i>
-                                <i class="bi bi-star-fill"></i>
-                                <i class="bi bi-star-fill"></i>
-                                <i class="bi bi-star-fill"></i>
-                                <i class="bi bi-star-fill"></i>
-                            </div>
-                            <div class="price">
-                                <h5 class="mb-0 fw-bold">$386.66</h5>
-                            </div>
-                        </div>
-                    </div>
-                </a>
-            </div>
-            <div class="product-card col-md-3 col-6 mb-4">
-                <a href="detail-product.php">
-                    <div class="card h-100 product-shadow shadow">
-                        <div class="card-body">
-                            <div class="card-img-top">
-                                <img src="assets/img/product-2.png" class="img-fluid" alt="product-image">
-                            </div>
-                        </div>
-                        <div class="card-body text-center">
-                            <h6 class="fw-semibold">Nike Legend Essential 3 Next Nature</h6>
-                            <div class="star mb-3">
-                                <i class="bi bi-star-fill"></i>
-                                <i class="bi bi-star-fill"></i>
-                                <i class="bi bi-star-fill"></i>
-                                <i class="bi bi-star-fill"></i>
-                                <i class="bi bi-star-fill"></i>
-                            </div>
-                            <div class="price">
-                                <h5 class="mb-0 fw-bold">$386.66</h5>
-                            </div>
-                        </div>
-                    </div>
-                </a>
-            </div>
+                <?php }
+            } else { ?>
+                <p class="text-center h5 text-danger m-0">Related Product Not Found!</p>
+            <?php } ?>
         </div>
     </div>
 
@@ -222,7 +158,7 @@ $images = $db->getImagesByProductId($product->id);
                         info@wearshoes.com
                     </div>
                     <div class="footer-address-item">
-                        New Zealand, Amsterdam, Kalipuro,<br>Mugiwara Street, Wano village
+                        New Zealand, Amsterdam, Kalipuro,<br>Mugiwara Street, Wano Village
                     </div>
                 </div>
                 <div class="col text-center text-light mb-5 mb-md-0">
@@ -231,32 +167,17 @@ $images = $db->getImagesByProductId($product->id);
                     </div>
                     <div class="footer-item mb-1">
                         <span>
-                            Kursi
+                            Sports
                         </span>
                     </div>
                     <div class="footer-item mb-1">
                         <span>
-                            Meja
+                            Classics
                         </span>
                     </div>
                     <div class="footer-item mb-1">
                         <span>
-                            Sofa
-                        </span>
-                    </div>
-                    <div class="footer-item mb-1">
-                        <span>
-                            Electronic
-                        </span>
-                    </div>
-                    <div class="footer-item mb-1">
-                        <span>
-                            Almari
-                        </span>
-                    </div>
-                    <div class="footer-item">
-                        <span>
-                            Lainnya
+                            Casuals
                         </span>
                     </div>
                 </div>

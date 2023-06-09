@@ -128,6 +128,19 @@ class Database
         }
     }
 
+    public function getRelatedProducts($productCategory, $currentProductId)
+    {
+        try {
+            $stmt = $this->connection->prepare("SELECT products.name, products.price, products.slug, images.image as image FROM products JOIN images ON products.id=images.product_id WHERE products.category_id=:productCategory AND products.id!=:currentProductId GROUP BY products.id ORDER BY RAND() LIMIT 4");
+            $stmt->bindParam(":productCategory", $productCategory);
+            $stmt->bindParam(":currentProductId", $currentProductId);
+            $stmt->execute();
+            return $stmt->fetchAll();
+        } catch (PDOException $error) {
+            echo "Error on fetch all products: " . $error->getMessage();
+        }
+    }
+
     public function getProductBySlug(string $slug)
     {
         try {
@@ -145,6 +158,56 @@ class Database
         try {
             $stmt = $this->connection->prepare("SELECT * FROM images WHERE images.product_id=:product_id");
             $stmt->bindParam(":product_id", $product_id);
+            $stmt->execute();
+            return $stmt->fetchAll();
+        } catch (PDOException $error) {
+            echo "Error on fetch all products: " . $error->getMessage();
+        }
+    }
+
+    public function getAllProductRandomOrder()
+    {
+        try {
+            $stmt = $this->connection->prepare("SELECT products.name, products.price, products.slug, images.image as image FROM products JOIN images ON products.id=images.product_id GROUP BY products.id ORDER BY RAND()");
+            $stmt->execute();
+            return $stmt->fetchAll();
+        } catch (PDOException $error) {
+            echo "Error on fetch all products: " . $error->getMessage();
+        }
+    }
+
+    public function searchProduct($keyword, $category)
+    {
+        $conditions = [];
+        $orderBy = "RAND()";
+
+        if (!empty($keyword)) {
+            $keywords = explode('-', str_replace('+', ' ', $keyword));
+
+            foreach ($keywords as $key) {
+                $conditions[] = "products.name LIKE '%" . trim($key) . "%'";
+            }
+
+            $orderBy = "CASE WHEN " . implode(" AND ", $conditions) . " THEN 1 ELSE 2 END, RAND()";
+        }
+
+        if (!empty($category)) {
+            $categoryId = $this->getCategoryIdByName($category);
+            if ($categoryId) {
+                $conditions[] = "products.category_id = " . $categoryId;
+            }
+        }
+
+        try {
+            $query = "SELECT products.name, products.price, products.slug, images.image as image FROM products JOIN images ON products.id=images.product_id";
+
+            if (!empty($conditions)) {
+                $query .= " WHERE " . implode(' AND ', $conditions);
+            }
+
+            $query .= " GROUP BY products.id ORDER BY " . $orderBy;
+
+            $stmt = $this->connection->prepare($query);
             $stmt->execute();
             return $stmt->fetchAll();
         } catch (PDOException $error) {
@@ -175,6 +238,19 @@ class Database
         }
     }
 
+    public function getCategoryIdByName(string $categoryName)
+    {
+        try {
+            $stmt = $this->connection->prepare("SELECT id FROM categories WHERE category = ?");
+            $stmt->execute([$categoryName]);
+            $categoryId = $stmt->fetchColumn();
+            return $categoryId;
+        } catch (PDOException $error) {
+            echo "Error on get category ID: " . $error->getMessage();
+            return null;
+        }
+    }
+
     public function fetchAllProducts()
     {
         try {
@@ -186,6 +262,126 @@ class Database
         }
     }
 
+    public function insertContactUs(array $data)
+    {
+        try {
+            $stmt = $this->connection->prepare("INSERT INTO contact_us (email, subject, message) VALUES (:email, :subject, :message)");
+            return $stmt->execute($data);
+        } catch (PDOException $error) {
+            echo "Error on insert contact us data: " . $error->getMessage();
+        }
+    }
+
+    public function fetchAllContactUs()
+    {
+        try {
+            $stmt = $this->connection->prepare("SELECT * FROM contact_us ORDER BY created_at DESC");
+            $stmt->execute();
+            return $stmt->fetchAll();
+        } catch (PDOException $error) {
+            echo "Error on fetch all contact us: " . $error->getMessage();
+        }
+    }
+
+    public function getContactUsById(int $id)
+    {
+        try {
+            $stmt = $this->connection->prepare("SELECT * FROM contact_us WHERE id=:id");
+            $stmt->bindParam(":id", $id);
+            $stmt->execute();
+            $message = $stmt->fetch();
+            if ($message->status == "UNREAD") {
+                $this->updateContactUsStatusById($id);
+            }
+            return $message;
+        } catch (PDOException $error) {
+            echo "Error on fetch all products: " . $error->getMessage();
+        }
+    }
+
+    public function updateContactUsStatusById(int $id)
+    {
+        try {
+            $stmt = $this->connection->prepare("UPDATE contact_us SET status=:status WHERE id=:id");
+            $stmt->bindValue(":status", "READ");
+            $stmt->bindParam(":id", $id);
+            $stmt->execute();
+        } catch (PDOException $error) {
+            echo "Error on edit contact us status: " . $error->getMessage();
+        }
+    }
+
+    public function destroyContactUsById(int $id)
+    {
+        try {
+            $stmt = $this->connection->prepare("DELETE FROM contact_us WHERE id=:id");
+            $stmt->bindParam(":id", $id);
+            $stmt->execute();
+            return $stmt->fetchAll();
+        } catch (PDOException $error) {
+            echo "Error on delete contact us: " . $error->getMessage();
+        }
+    }
+
+    public function getProductsWithFilter($category, $search, $minPrice, $maxPrice, $sizes)
+    {
+        try {
+            $query = "SELECT products.name, products.price, products.slug, images.image as image 
+                  FROM products 
+                  JOIN images ON products.id=images.product_id";
+
+            $conditions = [];
+            $params = [];
+
+            if (!empty($category)) {
+                if ($category == 'sport') {
+                    $category = 1;
+                } else if ($category == 'classic') {
+                    $category = 2;
+                } else if ($category == 'casual') {
+                    $category = 3;
+                }
+                $conditions[] = "products.category_id = :category";
+                $params['category'] = $category;
+            }
+
+            if (!empty($search)) {
+                $conditions[] = "products.name LIKE :search";
+                $params['search'] = '%' . $search . '%';
+            }
+
+            if ($minPrice != '' && $maxPrice != '') {
+                $conditions[] = "products.price BETWEEN :minPrice AND :maxPrice";
+                $params['minPrice'] = $minPrice .= '00';
+                $params['maxPrice'] = $maxPrice .= '00';
+            }
+
+            if (!empty($sizes)) {
+                $sizeConditions = [];
+
+                foreach ($sizes as $key => $sizeValue) {
+                    $sizeConditions[] = "FIND_IN_SET(:size_$key, products.size)";
+                    $params["size_$key"] = $sizeValue;
+                }
+
+                $conditions[] = "(" . implode(" OR ", $sizeConditions) . ")";
+            }
+
+            if (!empty($conditions)) {
+                $query .= " WHERE " . implode(" AND ", $conditions);
+            }
+
+            $query .= " GROUP BY products.id ORDER BY created_at DESC";
+
+            $stmt = $this->connection->prepare($query);
+            $stmt->execute($params);
+
+            return $stmt->fetchAll();
+        } catch (PDOException $error) {
+            echo "Error on products by filter: " . $error->getMessage();
+        }
+    }
+
     public function destroyImagesByProductId(string $product_id)
     {
         try {
@@ -194,7 +390,7 @@ class Database
             $stmt->execute();
             return $stmt->fetchAll();
         } catch (PDOException $error) {
-            echo "Error on fetch all products: " . $error->getMessage();
+            echo "Error on delete images: " . $error->getMessage();
         }
     }
 

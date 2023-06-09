@@ -69,4 +69,51 @@ class Utils
 
         return $finalName;
     }
+
+    public static function CurrencyFormatting(string $price): string
+    {
+        return number_format($price / 100, 2, '.', ',');
+    }
+
+    public static function EmailValidation(string $email)
+    {
+        $pattern = '/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/';
+        return preg_match($pattern, $email);
+    }
+
+    public static function GenerateNotFoundMessage($category, $search, $minPrice, $maxPrice, $sizes): string
+    {
+        $stringCategory = $category;
+        if ($category == '1') {
+            $stringCategory = 'sport';
+        } else if ($category == '2') {
+            $stringCategory = 'classic';
+        } else if ($category == '3') {
+            $stringCategory = 'casual';
+        }
+
+        $message = "";
+
+        if (!empty($search)) {
+            $message .= "<p class='text-center m-0'><span class='fw-bold'>Product Name: </span> $search</p>";
+        }
+
+        if (!empty($category)) {
+            $message .= "<p class='text-center m-0'><span class='fw-bold'>Category: </span>" . ucfirst($stringCategory) . "</p>";
+        }
+
+        if ($minPrice != '' && $maxPrice != '') {
+            $message .= "<p class='text-center m-0'><span class='fw-bold'>Price From: </span> \$$minPrice<span class='fw-bold'> To: </span> \$$maxPrice</p>";
+        }
+
+        if (!empty($sizes)) {
+            $message .= "<p class='text-center m-0'><span class='fw-bold'>Size: </span>" . implode(", ", $sizes) . "</p>";
+        }
+
+        if (!empty($message)) {
+            return $message .= "<p class='text-danger fw-bold text-center h5 mt-2'>Product With That Filter Not Found!</p>";
+        } else {
+            return "<p class='text-danger fw-bold text-center h5 mt-2'>Product Not Found!</p>";
+        }
+    }
 }

@@ -10,7 +10,7 @@ require_once("../utils/uuid.php");
 
 if (isset($_POST["create-btn"])) {
     $name = htmlspecialchars($_POST["name"]);
-    $description = htmlspecialchars($_POST["description"]);
+    $description = $_POST["description"];
     $price = htmlspecialchars($_POST["price"]);
     $color = htmlspecialchars($_POST["color"]);
     $size = htmlspecialchars(implode(',', $_POST["size"]));

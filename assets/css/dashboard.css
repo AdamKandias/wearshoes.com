@@ -77,3 +77,16 @@ body {
   border-color: transparent;
   box-shadow: 0 0 0 3px rgba(255, 255, 255, .25);
 }
+
+.lite-editor {
+  min-height: 100px !important;
+  max-height: 400px !important;
+  font-family: "Source Sans Pro", "Helvetica Neue", Helvetica, Arial, sans-serif !important;
+  font-size: 17px !important;
+  line-height: 20px !important;
+}
+
+.lite-editor-btn-group-wrap-right {
+  display: none;
+  visibility: hidden;
+}

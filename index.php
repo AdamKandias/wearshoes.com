@@ -1,5 +1,6 @@
 <?php
 require_once "db/database.php";
+require_once "utils/utils.php";
 $db = new Database();
 
 $randomProduct = $db->getSingleRandomProduct();
@@ -28,8 +29,8 @@ $randomProduct = $db->getSingleRandomProduct();
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse mt-2 mt-lg-0" id="navbarSupportedContent">
-                <form action="" class="d-flex mx-auto mx-lg-0 ms-lg-auto col-12 col-sm-8 col-md-6" role="search">
-                    <input class="form-control" type="search" placeholder="Search something here...">
+                <form action="products.php" class="d-flex mx-auto mx-lg-0 ms-lg-auto col-12 col-sm-8 col-md-6" role="search">
+                    <input name="search" class="form-control" type="search" placeholder="Search something here...">
                     <button class="btn btn-search d-flex" type="submit">SEARCH<i class="ms-1 bi bi-search"></i></button>
                 </form>
                 <ul class="navbar-nav ms-auto mb-2 mt-2 mt-lg-0 mb-lg-0 text-center">
@@ -112,7 +113,7 @@ $randomProduct = $db->getSingleRandomProduct();
                         <div class="card-body text-center">
                             <h6 class="fw-semibold mb-2"><?= $product->name ?></h6>
                             <div class="d-flex justify-content-center align-items-center price gap-1">
-                                <h5 class="mb-0 fw-bold">$<?= number_format($product->price / 100, 2, '.', ',') ?></h5>
+                                <h5 class="mb-0 fw-bold">$<?= Utils::CurrencyFormatting($product->price) ?></h5>
                             </div>
                             <div class="star mt-1 mb-3">
                                 <i class="bi bi-star-fill"></i>
@@ -137,20 +138,20 @@ $randomProduct = $db->getSingleRandomProduct();
         <h2 class="text-center mb-5 fw-bold">Our Latest Product</h2>
         <div class="row row-cols-2 row-cols-lg-3 g-3 g-md-4 justify-content-center">
             <div class="col">
-                <a href="" class="position-relative category-card">
-                    <img src="assets/img/sports-category.png" class="img-fluid category rounded" alt="sports-category">
+                <a href="products.php?category=sport" class="position-relative category-card">
+                    <img src="assets/img/sports-category.png" class="img-fluid category rounded" alt="sport-category">
                     <h1 class="center-overlay">SPORTS</h1>
                 </a>
             </div>
             <div class="col">
-                <a href="" class="position-relative category-card">
-                    <img src="assets/img/classic-category.png" class="img-fluid category rounded" alt="sports-category">
+                <a href="products.php?category=classic" class="position-relative category-card">
+                    <img src="assets/img/classic-category.png" class="img-fluid category rounded" alt="classic-category">
                     <h1 class="center-overlay">CLASSIC</h1>
                 </a>
             </div>
             <div class="col">
-                <a href="" class="position-relative category-card">
-                    <img src="assets/img/casual-category.png" class="img-fluid category rounded" alt="sports-category">
+                <a href="products.php?category=casual" class="position-relative category-card">
+                    <img src="assets/img/casual-category.png" class="img-fluid category rounded" alt="casual-category">
                     <h1 class="center-overlay">CASUAL</h1>
                 </a>
             </div>
@@ -160,30 +161,34 @@ $randomProduct = $db->getSingleRandomProduct();
     <div class="container mt-4 pb-5">
         <h2 class="text-center mb-5 fw-bold">Shop Now</h2>
         <div class="row">
-            <div class="product-card col-md-3 col-6 mb-4">
-                <a href="detail-product.php">
-                    <div class="card h-100 product-shadow shadow">
-                        <div class="card-body">
-                            <div class="card-img-top">
-                                <img src="assets/img/product-1.png" class="img-fluid" alt="product-image">
+            <?php
+            $products = $db->getAllProductRandomOrder();
+            foreach ($products as $product) { ?>
+                <div class="product-card col-md-3 col-6 mb-4">
+                    <a href="detail-product.php?product=<?= $product->slug ?>">
+                        <div class="card h-100 product-shadow shadow">
+                            <div class="card-body">
+                                <div class="card-img-top">
+                                    <img src="public/img/products/<?= $product->image ?>" class="img-fluid card-img-top" alt="product-image">
+                                </div>
+                            </div>
+                            <div class="card-body text-center">
+                                <h6 class="fw-semibold"><?= $product->name ?></h6>
+                                <div class="star mb-3">
+                                    <i class="bi bi-star-fill"></i>
+                                    <i class="bi bi-star-fill"></i>
+                                    <i class="bi bi-star-fill"></i>
+                                    <i class="bi bi-star-fill"></i>
+                                    <i class="bi bi-star-fill"></i>
+                                </div>
+                                <div class="price">
+                                    <h5 class="mb-0 fw-bold">$<?= Utils::CurrencyFormatting($product->price) ?></h5>
+                                </div>
                             </div>
                         </div>
-                        <div class="card-body text-center">
-                            <h6 class="fw-semibold">Nike Legend Essential 3 Next Nature</h6>
-                            <div class="star mb-3">
-                                <i class="bi bi-star-fill"></i>
-                                <i class="bi bi-star-fill"></i>
-                                <i class="bi bi-star-fill"></i>
-                                <i class="bi bi-star-fill"></i>
-                                <i class="bi bi-star-fill"></i>
-                            </div>
-                            <div class="price">
-                                <h5 class="mb-0 fw-bold">$386.66</h5>
-                            </div>
-                        </div>
-                    </div>
-                </a>
-            </div>
+                    </a>
+                </div>
+            <?php } ?>
             <div class="product-card col-md-3 col-6 mb-4">
                 <a href="detail-product.php">
                     <div class="card h-100 product-shadow shadow">
@@ -214,54 +219,6 @@ $randomProduct = $db->getSingleRandomProduct();
                         <div class="card-body">
                             <div class="card-img-top">
                                 <img src="assets/img/product-7.png" class="img-fluid" alt="product-image">
-                            </div>
-                        </div>
-                        <div class="card-body text-center">
-                            <h6 class="fw-semibold">Nike Legend Essential 3 Next Nature</h6>
-                            <div class="star mb-3">
-                                <i class="bi bi-star-fill"></i>
-                                <i class="bi bi-star-fill"></i>
-                                <i class="bi bi-star-fill"></i>
-                                <i class="bi bi-star-fill"></i>
-                                <i class="bi bi-star-fill"></i>
-                            </div>
-                            <div class="price">
-                                <h5 class="mb-0 fw-bold">$386.66</h5>
-                            </div>
-                        </div>
-                    </div>
-                </a>
-            </div>
-            <div class="product-card col-md-3 col-6 mb-4">
-                <a href="detail-product.php">
-                    <div class="card h-100 product-shadow shadow">
-                        <div class="card-body">
-                            <div class="card-img-top">
-                                <img src="assets/img/product-2.png" class="img-fluid" alt="product-image">
-                            </div>
-                        </div>
-                        <div class="card-body text-center">
-                            <h6 class="fw-semibold">Nike Legend Essential 3 Next Nature</h6>
-                            <div class="star mb-3">
-                                <i class="bi bi-star-fill"></i>
-                                <i class="bi bi-star-fill"></i>
-                                <i class="bi bi-star-fill"></i>
-                                <i class="bi bi-star-fill"></i>
-                                <i class="bi bi-star-fill"></i>
-                            </div>
-                            <div class="price">
-                                <h5 class="mb-0 fw-bold">$386.66</h5>
-                            </div>
-                        </div>
-                    </div>
-                </a>
-            </div>
-            <div class="product-card col-md-3 col-6 mb-4">
-                <a href="detail-product.php">
-                    <div class="card h-100 product-shadow shadow">
-                        <div class="card-body">
-                            <div class="card-img-top">
-                                <img src="assets/img/product-5.png" class="img-fluid" alt="product-image">
                             </div>
                         </div>
                         <div class="card-body text-center">
@@ -424,30 +381,6 @@ $randomProduct = $db->getSingleRandomProduct();
                     </div>
                 </a>
             </div>
-            <div class="product-card col-md-3 col-6 mb-4">
-                <a href="detail-product.php">
-                    <div class="card h-100 product-shadow shadow">
-                        <div class="card-body">
-                            <div class="card-img-top">
-                                <img src="assets/img/product-7.png" class="img-fluid" alt="product-image">
-                            </div>
-                        </div>
-                        <div class="card-body text-center">
-                            <h6 class="fw-semibold">Nike Legend Essential 3 Next Nature</h6>
-                            <div class="star mb-3">
-                                <i class="bi bi-star-fill"></i>
-                                <i class="bi bi-star-fill"></i>
-                                <i class="bi bi-star-fill"></i>
-                                <i class="bi bi-star-fill"></i>
-                                <i class="bi bi-star-fill"></i>
-                            </div>
-                            <div class="price">
-                                <h5 class="mb-0 fw-bold">$386.66</h5>
-                            </div>
-                        </div>
-                    </div>
-                </a>
-            </div>
         </div>
     </div>
 
@@ -461,47 +394,38 @@ $randomProduct = $db->getSingleRandomProduct();
                     <div class="fw-semibold fs-4 my-3">
                         Contact Me
                     </div>
-                    <div class="footer-item fs-5 mb-1">
+                    <div class="footer-email-item mb-1">
                         info@wearshoes.com
                     </div>
-                    <div class="footer-item">
-                        New Zealand, Amsterdam, Kalipuro,<br>Mugiwara Street, Wano village
+                    <div class="footer-address-item">
+                        New Zealand, Amsterdam, Kalipuro,<br>Mugiwara Street, Wano Village
                     </div>
                 </div>
                 <div class="col text-center text-light mb-5 mb-md-0">
                     <div class="fw-semibold fs-4 mb-3">
                         Categories
                     </div>
-                    <div class="footer-item mb-1">
-                        <span>
-                            Kursi
-                        </span>
-                    </div>
-                    <div class="footer-item mb-1">
-                        <span>
-                            Meja
-                        </span>
-                    </div>
-                    <div class="footer-item mb-1">
-                        <span>
-                            Sofa
-                        </span>
-                    </div>
-                    <div class="footer-item mb-1">
-                        <span>
-                            Electronic
-                        </span>
-                    </div>
-                    <div class="footer-item mb-1">
-                        <span>
-                            Almari
-                        </span>
-                    </div>
-                    <div class="footer-item">
-                        <span>
-                            Lainnya
-                        </span>
-                    </div>
+                    <a href="products.php?category=sport">
+                        <div class="footer-item mb-1">
+                            <span>
+                                Sports
+                            </span>
+                        </div>
+                    </a>
+                    <a href="products.php?category=classic">
+                        <div class="footer-item mb-1">
+                            <span>
+                                Classics
+                            </span>
+                        </div>
+                    </a>
+                    <a href="products.php?category=casual">
+                        <div class="footer-item mb-1">
+                            <span>
+                                Casuals
+                            </span>
+                        </div>
+                    </a>
                 </div>
                 <div class="col text-center text-light mb-5 mb-md-0">
                     <div class="fw-semibold fs-4 mb-3">

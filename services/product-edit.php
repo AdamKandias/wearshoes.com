@@ -10,7 +10,7 @@ require_once("../utils/uuid.php");
 
 if (isset($_POST["edit-btn"])) {
     $name = htmlspecialchars($_POST["name"]);
-    $description = htmlspecialchars($_POST["description"]);
+    $description = $_POST["description"];
     $price = htmlspecialchars($_POST["price"]);
     $color = htmlspecialchars($_POST["color"]);
     $size = htmlspecialchars(implode(',', $_POST["size"]));
@@ -48,8 +48,10 @@ if (isset($_POST["edit-btn"])) {
         echo "Error on insert data";
     }
 
-    if (!$db->insertImage($fileName, $currentProduct->id)) {
-        echo "Error on insert image";
+    if (!empty($fileName)) {
+        if (!$db->insertImage($fileName, $currentProduct->id)) {
+            echo "Error on insert image";
+        }
     }
 
     header("location: ../dashboard.php");
